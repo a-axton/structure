@@ -1,9 +1,9 @@
-system-ops
-==========
+STRUCTURE
+=========
+###Warning - extremely buggy
+Currently functions perfectly as a build process tool. In-browser editing functionality is currently in development.
 
-Out of the box express restful server using gulp / browserify / polymer
+Edit your site in the browser. 
 
-###npm install browserify -g
-
-###npm install gulp -g
+Click an element you want to edit and structure will serve all SCSS files that contain the element's selectors. You can now live edit your precompiled styles.
 
