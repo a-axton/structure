@@ -1,0 +1,182 @@
+
+$button-border-hover: darken($light-gray, 12%);
+$button-back-hover: darken($light-gray, 8%);
+
+$button-border: darken($light-gray, 5%);
+$button-back: lighten($light-gray, 3%);
+
+.editor-sources {
+    margin: 0;
+    padding: 4px 0 0 0;
+    list-style-type: none;
+    overflow: hidden;
+    position: relative;
+    background: $light-gray;
+
+  &:after {
+    content: '';
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+    bottom: -1px;
+    left: 0px;
+    border: 1px solid $button-border-hover;
+  }
+
+    li {
+        display: inline-block;
+        height: 26px;
+        margin-right: -10px;
+        position: relative;
+        left: 4px;
+        font-size: 13px;
+        // font-family: 'source sans pro';
+        font-weight: 600;
+        top: -1px;
+        // overflow: hidden;
+
+        a {
+            text-decoration: none;
+            color: inherit;
+      display: block;
+      background-color: $button-back;
+            height: 27px;
+        }
+
+        span {
+            display: block;
+            padding: 5px 7px 5px;
+            margin: 0px 9px;
+            text-decoration: none;
+            color: rgba(0,0,0,.35);
+            text-shadow: 1px 1px 0px rgba($light-gray, .4);
+            border-top: 1px solid $button-border;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            background-color: $button-back;
+            height: 26px;
+            position: relative;
+            z-index: 4;
+
+      &:before,
+      &:after {
+        border: 1px solid $button-border;
+        position: absolute;
+        bottom: -1px;
+        width: 5px;
+        height: 5px;
+        content: " ";
+      }
+      &:before {
+        left: -13px;
+        border-bottom-right-radius: 6px;
+        border-width: 0 1px 1px 0;
+        box-shadow: 2px 2px 0 $button-back;
+      }
+      &:after {
+        right: -13px;
+        border-bottom-left-radius: 6px;
+        border-width: 0 0 1px 1px;
+        box-shadow: -2px 2px 0 $button-back;
+      }
+        }
+
+        &:before, &:after {
+          content: " ";
+          display: inline-block;
+          position: absolute;
+          margin-top: 3px;
+          top: 1px;
+          width: 20px;
+          height: 110%;
+          z-index: 1;
+          background-color: $button-back;
+          border: 1px solid $button-border;
+          -webkit-border-radius: 3px 3px 0 0;
+          -moz-border-radius: 3px 3px 0 0;
+          border-radius: 3px 3px 0 0;
+        }
+        
+        &:before {
+          left: 3px;
+          -webkit-transform: rotate(20deg);
+          -moz-transform: rotate(20deg);
+          -ms-transform: rotate(20deg);
+          -o-transform: rotate(20deg);
+          transform: rotate(20deg);
+          -webkit-box-shadow: 
+            inset 1px 0 0 rgba(255,255,255,0.3);
+          -moz-box-shadow: 
+            inset 1px 0 0 rgba(255,255,255,0.3);
+          box-shadow: 
+            inset 1px 0 0 rgba(255,255,255,0.3);
+        }
+        &:after {
+          right: 3px;
+          -webkit-transform: rotate(-20deg);
+          -moz-transform: rotate(-20deg);
+          -ms-transform: rotate(-20deg);
+          -o-transform: rotate(-20deg);
+          transform: rotate(-20deg);
+          -webkit-box-shadow: 
+            inset -1px 0 0 rgba(255,255,255,0.3);
+          -moz-box-shadow: 
+            inset -1px 0 0 rgba(255,255,255,0.3);
+          box-shadow: 
+            inset -1px 0 0 rgba(255,255,255,0.3);
+        }
+
+        &.add-page {
+            font-size: 10px;
+            padding: 0 1px;
+            z-index: 0;
+
+            span div {
+                margin-top: 5px;
+            }
+        }
+        
+        &:hover, &:focus, &.state-hover {
+          a, &:before, &:after {
+            
+          }
+        }
+
+        &[data-active="true"] {
+            z-index: 10;
+                top: -1px;
+                height: 27px;
+
+                span {
+                    height: 28px;
+                    border-color: $button-border-hover;
+                    background-color: white;
+                    color: rgba(0,0,0,.7);
+
+            &:before, &:after {
+              border-color: $button-border-hover;
+            }
+            &:before {
+              box-shadow: 2px 2px 0 white;
+            }
+            &:after {
+              box-shadow: -2px 2px 0 white;
+            }
+                }
+
+          a {
+            background-color: white;
+          }
+
+            &:before, &:after {
+                border-color: $button-border-hover;
+                    background-color: white;
+                    top: 1px;
+            // box-shadow: 0px 0px 7px rgba(0,0,0,.1);
+            }
+        }
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

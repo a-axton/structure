@@ -1,0 +1,58 @@
+.dom-tree {
+    position: fixed;
+    z-index: 2000;
+    top: 5px;
+    // height: calc(100% - 300px);
+    left: 5px;
+    font-family: sans-serif;
+
+    &:hover {
+        cursor: pointer;
+
+        .dom-tree-toggle {
+            background: $green;
+        }
+
+        .dom-tree-nodes {
+            right: -200px;
+        }
+    }
+    
+    .dom-tree-nodes {
+        position: absolute;
+        right: 45px;
+        width: 240px;
+        padding-top: 4px;
+        border-radius: 3px;
+        overflow: scroll;
+        @include transition(right 120ms ease-out);
+    }
+
+    .node {
+        padding: em(5) em(7);
+        @include linear-gradient($light-gray, darken($light-gray, 3%));
+        font-weight: 600;
+        font-size: em(14);
+        color: rgba(black, .7);
+        text-shadow: 1px 1px 0px rgba(white, .7);
+        text-transform: lowercase;
+
+        &:hover {
+            cursor: pointer;
+        @include linear-gradient(darken($light-gray, 3%), darken($light-gray, 10%));
+            
+        }
+
+        span {
+            position: relative;
+            pointer-events: none;
+        }
+    }
+}
+
+.dom-tree-toggle {
+    height: 40px;
+    width: 40px;
+    background: rgba(black, .1);
+    border-radius: 3px;
+}

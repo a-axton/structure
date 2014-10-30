@@ -1,0 +1,53 @@
+@import 'reset';
+@import 'bourbon';
+@import 'neat';
+
+@import 'vars';
+@import 'codemirror/codemirror';
+@import 'box-model-hover';
+@import 'viewport';
+@import 'dom-tree';
+@import 'editor/style-editor';
+@import 'editor/doc-nav';
+
+#viewport {
+    position: relative;
+    max-width: 1140px;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+#__bs_notify__ {
+    display: none !important;
+}
+
+body.edit-window {
+    background: #d9d9d9; 
+    font-family: sans-serif; 
+}
+
+/* !ATTN - don't remove this! */
+
+@import 'test';
+
+body {
+    background: white;
+}
+
+h1 {
+	color: white;
+
+    @media (max-width: 900px) {
+        color: purple;
+    }
+
+    @media (max-width: 700px) {
+        color: red;
+    }
+}
