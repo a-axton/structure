@@ -1,14 +1,29 @@
 #style-editor {
     position: fixed;
     z-index: 2000;
-    right: 0; 
-    top: 0px;
+    right: -340px; 
+    top: 40px;
+    padding-top: 5px;
     height: calc(100% - 32px);
     border-left: 1px solid $gray;
 }
 
+#style-editor-toggle {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    height: 40px;
+    width: 40px;
+    background: rgba(black, .1);
+    border-radius: 3px;
+
+    &.toggle {
+        border: 1px solid $green;
+    }
+}
+
 .style-editor-resizable {
-    position: relative;
+    // position: relative;
     width: 340px;
     
     .ui-resizable-handle {

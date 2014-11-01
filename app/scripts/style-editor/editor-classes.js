@@ -34,14 +34,14 @@ module.exports = {
         // });
     },
     resetMarkSelectorSource: function(){
-        // var selectorSourceMarks = this.state.selectorSourceMarks;
-        
-        // // remove old selector info widgets
-        // if (selectorSourceMarks){
-        //     _.each(selectorSourceMarks, function(mark){
-        //         mark.clear();
-        //     });
-        // }
+        var selectorSourceMarks = this.state.cm.getAllMarks();
+        console.log(selectorSourceMarks)
+        // remove old selector info widgets
+        if (selectorSourceMarks){
+            _.each(selectorSourceMarks, function(mark){
+                mark.clear();
+            });
+        }
     },
     // resetEditorLineWidgets: function(){
     //     var selectorInfoWidgets = this.state.selectorInfoWidgets;

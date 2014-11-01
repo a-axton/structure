@@ -9,18 +9,40 @@
     // background: $gray;
     // box-shadow: inset 0px 0px 3px rgba(0,0,0,.25);
     z-index: 9000;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .viewport-width {
     width: 100%;
     height: 32px;
     margin: 0 auto;
-    max-width: 1200px;
+    width: 1140px;
+    // max-width: 1200px;
     position: relative;
     left: 0px;
     top: 0px;
     background-color: #ED6C58;
     @include linear-gradient(to top, darken( #ED6C58, 2%), lighten( #ED6C58, 5%)); 
+}
+
+.viewport-text {
+    position: relative;
+    top: 3px;
+    margin: 0 auto;
+    width: 90px;
+    padding: em(5);
+    font-size: 14px;
+    text-align: center;
+    color: rgba(white,.9);
+    text-shadow: 0px 0px 1px shade( #ED6C58, 8%);
+    border: 1px solid shade( #ED6C58, 3%);
+    border-radius: 2px;
+    // background: rgba(black,.02);
 }
 
 .viewport-handle {

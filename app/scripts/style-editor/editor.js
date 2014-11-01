@@ -28,8 +28,50 @@ var StyleEditor = React.createClass({
 
         // create resizable window for editor
         this.initResizable();
+
+        this.toggleButton();
         
         this.setState({cm: cm});
+    },
+    toggleButton: function(){
+        var self = this;
+        var toggleButton = $('#style-editor-toggle');
+        var editor = $('#style-editor');
+        
+        toggleButton.click(function(){
+            toggleButton.toggleClass('toggle');
+
+            if (toggleButton.hasClass('toggle')){
+                self.showEditor();
+            } else {
+                self.hideEditor();
+            }
+        }).hover(function(){
+            if (!toggleButton.hasClass('toggle')){
+                self.showEditor();
+            }
+        },function(e){
+            console.log($(e.relatedTarget))
+            if (!toggleButton.hasClass('toggle') && !$(e.relatedTarget).parent('#style-editor')){
+                self.hideEditor();
+            }
+        });
+
+        editor.mouseleave(function(){
+            if (!toggleButton.hasClass('toggle')){
+                self.hideEditor();
+            }
+        });
+    },
+    showEditor: function(){
+        var editor = $('#style-editor');
+
+        editor.css({right: 0});
+    },
+    hideEditor: function(){
+        var editor = $('#style-editor');
+
+        editor.css({right: -editor.width()});
     },
     getInitialState: function(){
         return {
@@ -65,6 +107,9 @@ var StyleEditor = React.createClass({
         var self = this;
         var cm = this.state.cm;
 
+        if (cm._handlers.mousedown){
+            delete cm._handlers.mousedown[0];    
+        }
         cm.on('mousedown', function(editor, e){
             var cursor = cm.getCursor();
             var mark = cm.findMarksAt({line: cursor.line, ch: cursor.ch});
@@ -146,6 +191,10 @@ var StyleEditor = React.createClass({
         var self = this;
         var cm = this.state.cm;
 
+        if (cm._handlers.keyHandled){
+            delete cm._handlers.keyHandled[0];    
+        }
+
         cm.on('keyHandled', function(editor, name, e){
             e.preventDefault();
 
@@ -187,7 +236,10 @@ var StyleEditor = React.createClass({
             }, 400);
         }
 
-        delete cm._handlers.change[0];
+        if (cm._handlers.change){
+            delete cm._handlers.change[0];    
+        }
+        
         cm.on('change', onChange);
     },
     setObjectListeners: function(){
@@ -195,21 +247,20 @@ var StyleEditor = React.createClass({
         watch(inspector, 'selectors', this.recieveSelectors);
     },
     recieveSelectors: function(){
-        var cm = this.state.cm.doc;
+        var cm = this.state.cm;
         var selectors = inspector.selectors;
         var source = inspector.source;
         var editorValues = [];
-this.setState({ selectors: selectors });
-        // writes content to editor
-        // _.each(selectors, function(selector){
-        //     editorValues.push(selector.contents);
-        // });
         
+        this.setState({ selectors: selectors });
+        this.showEditor();
         // write to editor
-        cm.setValue(source);
-
-
-
+        // cm.setValue(source);
+        var test = CodeMirror.Doc(source, 'text/x-scss');
+        cm.swapDoc(test)
+        // mark editor at sources for active selectors
+        this.markSelectorSource();
+        
         // editor events
         this.onEditorChanged();
         this.onEditorClicked();
@@ -219,14 +270,10 @@ this.setState({ selectors: selectors });
         // this.resetEditorLineWidgets();
         // this.setEditorLineWidgets();
         
-        // mark editor at sources for active selectors
-        this.resetMarkSelectorSource();
-        this.markSelectorSource();
-        
         // go to first selector mark
         this.scrollToFirstMark();
-    
-        
+
+
     },
     render: function(){
         return (
@@ -234,7 +281,6 @@ this.setState({ selectors: selectors });
                 <Tabs selectors={this.state.selectors}/>
                 <div className="style-editor"></div>
             </div>
-            
         );
     }
 });
