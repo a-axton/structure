@@ -19,6 +19,7 @@
     "react": "~0.11.1",
     "codemirror": "~4.5.0",
     "watch": "*",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "reflux": "~0.1.13"
   }
 }

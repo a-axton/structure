@@ -1,14 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react');
 var _ = require('lodash');
-var SelectorInfo = require('./selector-info');
 var inspector = require('../inspector/inspector');
 
 module.exports = {
     markSelectorSource: function(){
-        var cm = this.state.cm;
-        var allSelectors = window.app.selectors;
-        var selectors = inspector.selectors;
+        var cm = this.props.cm;
+        var source = this.props.source;
+        var selectors = source.selectors;
 
         _.each(selectors, function(selector){
             var start = selector.sourceStart;
@@ -24,7 +23,7 @@ module.exports = {
                     title: selector.selector
                 }
             );
-
+            console.log(mark)
             mark.selector = selector;
         });
 
@@ -43,6 +42,75 @@ module.exports = {
             });
         }
     },
+    getMarkPosition: function(name){
+        // tabs through marks belonging to active selector
+        // selects first by default
+        // returns next mark and position of mark
+        var doc = this.state.doc;
+        var marks = doc.getAllMarks();
+        var nextMarkIndex;
+        var direction;
+        var mark;
+        var position;
+
+        // change direction based on keys used
+        if (name == 'Cmd-Down'){
+            direction = 1;
+        } else if (name == 'Cmd-Up'){
+            direction = -1;
+        }
+        
+        // find currently active mark
+        var activeMarkIndex = _.findIndex(marks, function(mark){
+            return mark.active;
+        });
+
+        if (activeMarkIndex < 0){
+            marks[0].active = true;
+            nextMarkIndex = 0;
+        } else {
+            var marksLength = marks.length;
+            
+            nextMarkIndex = activeMarkIndex + direction;
+            
+            if (nextMarkIndex > marksLength){
+                nextMarkIndex = 0;
+            } else if (nextMarkIndex < 0){
+                nextMarkIndex = marksLength-2;
+            }
+            console.log(marks, nextMarkIndex, marksLength)
+            // reset active flag of current mark
+            marks[activeMarkIndex].active = false;
+
+            // set active flag for next mark
+            marks[nextMarkIndex].active = true;
+        }
+
+        mark = marks[nextMarkIndex];
+        position = mark.find();
+
+        return { 
+            mark: mark,
+            position: position
+        }
+    },
+    scrollToFirstMark: function(){
+        var doc = this.state.doc;
+        var mark = this.getMarkPosition();
+
+        doc.scrollIntoView(mark.position);
+    },
+    setActiveMark: function(activateMark){
+        // sets a mark as active
+        var doc = this.state.doc;
+        var marks = doc.getAllMarks();
+
+        _.each(marks, function(mark){
+            mark.active = false;
+        });
+
+        activateMark.active = true;
+    }
     // resetEditorLineWidgets: function(){
     //     var selectorInfoWidgets = this.state.selectorInfoWidgets;
         

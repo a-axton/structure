@@ -22,7 +22,6 @@ pageDoc.click(function(e){
     }
 });
 
-
 pageDoc.on('mouseover','*', function(e){
     var target = $(e.target),
         tagName = target.prop('tagName'),

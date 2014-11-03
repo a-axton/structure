@@ -12,6 +12,8 @@ var selectorList = function(callback){
 selectorList(function(data){
     var selectors = data.selectors;
     var mediaQueries = data.mediaQueries;
+    var variables = data.variables;
+    console.log(variables)
 
     window.app.selectors = selectors;
     window.app.mediaQueries = mediaQueries;

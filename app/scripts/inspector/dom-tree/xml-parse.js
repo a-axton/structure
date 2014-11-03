@@ -1,5 +1,6 @@
 module.exports = function(xml, strip) {
     var obj = {};
+    var nodeId = 0;
     if (typeof xml === "string") {
         xml = getXmlDocument(xml);
     }
@@ -14,7 +15,10 @@ module.exports = function(xml, strip) {
                 //element node;
                 o = {
                     nodeName: node.nodeName,
+                    nodeId: nodeId
                 }; //record nodename
+                node.nodeId = nodeId;
+                nodeId++
                 for (i = 0, l = node.attributes.length, n = node.attributes; i < l; i++) { //append attributes
                     a = traverse(n.item(i));
                     for (j in a) {

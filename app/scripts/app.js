@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 var selectorList = require('./style-editor/build-selector-list');
+var nodeMouseEvents = require('./inspector/node-mouse-events');
 var StyleEditor = require('./style-editor/editor');
 var DomTree = require('./inspector/dom-tree/dom-tree');
 var Viewport = require('./viewport/viewport');

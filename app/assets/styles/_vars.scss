@@ -1,3 +1,15 @@
+@function json-encode($value) {
+  $type: type-of($value);                            /* 1 */
+  @if function_exists('_json-encode--#{$type}') {    /* 2 */
+    @return call('_json-encode--#{$type}', $value);  /* 3 */
+  } 
+  @warn "Unknown type for #{$value} (#{$type}).";    /* 4 */
+  @return false;                                     /* 4 */
+}
+
+@import 'vars/breakpoints';
+@import 'vars/colors';
+
 $light-gray: #f9f9f9;
 $gray: #e9e9e9;
 $red: #ED6C58;

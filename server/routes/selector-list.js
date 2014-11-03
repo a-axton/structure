@@ -2,23 +2,7 @@ var _ = require('lodash');
 var path = require('path');
 var fs = require('fs');
 var postcss = require('postcss');
-
-function definedVars(rule){
-    var vars = rule.text.split(',');
-    var parsedVars = [];
-
-    _.each(vars, function(varText){
-        parsedVars.push(varText.split(':')[1].replace(' ',''))
-    });
-    
-    return {
-        group: parsedVars[0],
-        vars: parsedVars[1],
-        start: rule.source.start
-    }
-}
-
-
+var parseVars = require('./parse-vars');
 
 module.exports = function(req, res){
     var css = fs.readFileSync(path.join( __dirname, '../../build/assets/css/main.css'));
@@ -107,20 +91,6 @@ module.exports = function(req, res){
                 // 2.   variables and variable groups that need to be accessed in the app
                     if (rule.text.indexOf('!ATTN') > -1){
                         removeAbove = selectors.length;
-                    } else if (rule.text.indexOf('@vargroup') > -1) {
-                        var vars = rule.text.split(',');
-                        var parsedVars = [];
-
-                        _.each(vars, function(varText){
-                            parsedVars.push(varText.split(':')[1].replace(' ',''))
-                        });
-                        
-                        var varGroup = {
-                            group: parsedVars[0],
-                            vars: parsedVars[1],
-                            start: rule.source.start
-                        }
-                        console.log(varGroup)
                     }
             } 
         });
@@ -134,5 +104,8 @@ module.exports = function(req, res){
         selectors.splice(0, removeAbove);
     }
 
-    res.send({selectors: selectors, mediaQueries: mediaQueries});
+    parseVars.parse(function(parsedVars) {
+        res.send({selectors: selectors, mediaQueries: mediaQueries, variables: parsedVars});
+    });
+
 }

@@ -9,20 +9,10 @@ var scouter = new Scouter();
 
 module.exports = function(req, res, next){
     var sources = []; // source file location for each selector
+    var selectorSources = [];
     var selectors = req.body.selectors;
     var map = fs.readFileSync(path.join( __dirname, '../../build/assets/css/main.css.map'));
     var smc = new sourceMap.SourceMapConsumer(JSON.parse(map));
-    var instream = fs.createReadStream(path.join( __dirname, '../../app/assets/styles/main.scss'));
-    var lineCount = 0;
-
-    function parseFileContents(){
-        _.each(sources, function(source){
-            var fileContents = source.fileContents.join('\n').replace(/[\]}{]/g,'');
-            var contents = source.selector + ' {\n' + fileContents + '}';
-            source.contents = contents;
-            source.parsed = postcss.parse(contents)
-        });
-    }
 
     function getSourceOriginalPosition(selector){
         var startLine = parseFloat(selector.start.line);
@@ -49,23 +39,35 @@ module.exports = function(req, res, next){
     function buildSourceObject(selector){
         var specificity = scouter.score(selector.selector);
         var orignialPosition = getSourceOriginalPosition(selector);
-        var params = selector.params;;
+        var params = selector.params;
+        var sourceFile = orignialPosition.sourceStart.source.replace('/source/','');
+        var existingSource = _.find(sources, function(source){
+            return source.source == sourceFile;
+        });
 
-        var source = { 
+        var selectorSource = { 
             selector: selector.selector,
             specificity: specificity,
+            source: sourceFile,
             sourceStart: orignialPosition.sourceStart,
-            sourceEnd: orignialPosition.sourceEnd,
-            lines: 0,
-            fileContents: []
-        }
-        
-        if (params){
-            source.params = params;
-            source.raw = selector.raw;
+            sourceEnd: orignialPosition.sourceEnd
         }
 
-        sources.push(source);
+        if (params){
+            selectorSource.params = params;
+        }
+
+        if (existingSource){
+            existingSource.selectors.push(selectorSource);
+        } else {
+            sources.push({
+                source: sourceFile,
+                sourceContent: null,
+                selectors: [selectorSource]
+            });
+        }
+
+        selectorSources.push(selectorSource);
     }
 
     // adds file positions for selectors
@@ -79,21 +81,22 @@ module.exports = function(req, res, next){
             });
         }
     });
-    
-    var source = [];
 
-    lineReader.eachLine(path.join( __dirname, '../../app/assets/styles/main.scss'), function(line, last) {
-        // _.each(sources, function(source){
-        //     if (lineCount >= source.sourceStart.line && lineCount <= source.sourceEnd.line){
-        //         source.fileContents.push(line);
-        //     }   
+    var done = _.after(sources.length, function() {
+        res.send({ sources: sources, selectors: selectorSources });
+    });
 
-        // });
-        source.push(line);
-        lineCount++;
-    }).then(function(){
-        // parseFileContents();
-        // console.log(sources)
-        res.send({ source: source.join('\n'), selectors: sources });
+    _.forEach(sources, function(source) {
+        var sourcePath = path.join( __dirname, '../../app/assets/styles/' + source.source);
+        var sourceContent = [];
+        var lineCount = 0;
+
+        lineReader.eachLine(sourcePath, function(line, last) {
+            sourceContent.push(line);
+            lineCount++;
+        }).then(function(){
+            source.sourceContent = sourceContent.join('\n');
+            done();
+        });    
     });
 }
